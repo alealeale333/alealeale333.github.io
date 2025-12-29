@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog – Mein Beitrag</title>
+  <style>
+    body { font-family: system-ui, Arial; margin: 0; line-height: 1.7; }
+    header { padding: 56px 20px; background: #111; color: #fff; }
+    main { max-width: 820px; margin: 0 auto; padding: 28px 20px 64px; }
+    article { background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 22px; }
+    .meta { opacity: .75; margin-top: -10px; }
+    img { max-width: 100%; border-radius: 14px; margin: 18px 0; }
+    footer { opacity: .7; margin-top: 22px; font-size: 14px; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mein Blog</h1>
+    <p>Ein kurzer Blogeintrag für die Uni-Abgabe.</p>
+  </header>
+
+  <main>
+    <article>
+      <h2>Titel deines Blogeintrags</h2>
+      <p class="meta"><em>29. Dezember 2025 • Alessandro Garofalo</em></p>
+
+      <p>
+        Hier kommt dein Text rein. Schreib einfach ganz normal wie in Word.
+      </p>
+
+      <p>
+        Wenn du ein Bild willst: lade es in einen Ordner <strong>images</strong> hoch
+        und nutze dann z. B.:
+      </p>
+
+      <!-- Bild-Beispiel -->
+      <!-- <img src="images/meinbild.jpg" alt="Beschreibung"> -->
+
+      <h3>Zwischenüberschrift</h3>
+      <p>
+        Noch mehr Text. Du kannst auch Links setzen, z. B.
+        <a href="https://example.com" target="_blank" rel="noreferrer">Quelle</a>.
+      </p>
+
+      <footer>
+        <p>Kontakt: <a href="mailto:deinname@mail.de">deinname@mail.de</a></p>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>
