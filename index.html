@@ -1,572 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Uncanny Valley – KI-Avatare, Akzeptanz & Design</title>
-  <meta name="description" content="Warum menschenähnliche KI-Avatare manchmal unheimlich wirken – und wie du sie so gestaltest, dass Akzeptanz und Vertrauen steigen." />
+  <meta charset="UTF-8">
+  <title>Uncanny Valley & KI-Avatare – Synaptica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    :root{
-      --bg: #0b0d12;
-      --bg2:#0f1320;
-      --card:#12182a;
-      --text:#e9ecf5;
-      --muted:#aab2c8;
-      --border: rgba(255,255,255,.10);
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      --accent:#7c3aed; /* violet */
-      --accent2:#22c55e; /* green */
-      --warn:#f59e0b;
-      --radius: 18px;
-      --max: 1100px;
-    }
-
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg:#f6f7fb;
-        --bg2:#eef1fb;
-        --card:#ffffff;
-        --text:#0b1020;
-        --muted:#4b5563;
-        --border: rgba(15,23,42,.10);
-        --shadow: 0 18px 50px rgba(2,6,23,.10);
-        --accent:#6d28d9;
-        --accent2:#16a34a;
-      }
-    }
-
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1100px 600px at 20% -10%, rgba(124,58,237,.35), transparent 55%),
-        radial-gradient(900px 520px at 85% 10%, rgba(34,197,94,.22), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      line-height:1.75;
-    }
-
-    /* progress bar */
-    .progress{
-      position:fixed; top:0; left:0; height:4px; width:0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      z-index:9999;
-      box-shadow: 0 2px 12px rgba(124,58,237,.35);
-    }
-
-    a{ color:inherit; text-decoration:none; }
-    a:hover{ text-decoration:underline; text-underline-offset: 3px; }
-
-    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
-
-    /* top nav */
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(15,18,28,.55);
-      border-bottom: 1px solid var(--border);
-    }
-    @media (prefers-color-scheme: light){
-      .nav{ background: rgba(255,255,255,.65); }
-    }
-    .nav-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 14px 0;
-      gap: 14px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px; font-weight:700;
-      letter-spacing:-.02em;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 18px rgba(124,58,237,.35);
-    }
-    .nav-links{
-      display:flex; gap:14px; color:var(--muted); font-size:14px;
-    }
-    .nav-links a{ text-decoration:none; }
-    .nav-links a:hover{ color:var(--text); }
-
-    /* hero */
-    .hero{
-      padding: 54px 0 26px;
-    }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      align-items:stretch;
-    }
-    @media (max-width: 980px){
-      .hero-grid{ grid-template-columns: 1fr; }
-    }
-
-    .hero-card{
-      border: 1px solid var(--border);
-      background: rgba(18,24,42,.65);
-      border-radius: calc(var(--radius) + 6px);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    @media (prefers-color-scheme: light){
-      .hero-card{ background: rgba(255,255,255,.75); }
-    }
-
-    .hero-main{
-      padding: 28px;
-    }
-    .kicker{
-      display:inline-flex; align-items:center; gap:10px;
-      font-size: 13px; color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.04);
-    }
-    .k-badge{
-      width: 10px; height: 10px; border-radius: 999px;
-      background: var(--accent2);
-      box-shadow: 0 0 16px rgba(34,197,94,.35);
-    }
-    h1{
-      margin: 14px 0 10px;
-      font-size: 44px;
-      line-height:1.08;
-      letter-spacing:-.03em;
-    }
-    @media (max-width: 520px){
-      h1{ font-size: 36px; }
-    }
-
-    .subtitle{
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       margin: 0;
-      color: var(--muted);
-      max-width: 72ch;
-      font-size: 16px;
+      background: #f7f7f7;
+      color: #111;
+      line-height: 1.75;
     }
 
-    .meta{
-      margin-top: 16px;
-      display:flex; flex-wrap:wrap; gap:10px;
-      color: var(--muted);
-      font-size: 13px;
-      align-items:center;
-    }
-    .pill{
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.04);
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
     }
 
-    .hero-side{
-      padding: 22px;
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .stat{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      background: rgba(255,255,255,.04);
-    }
-    .stat strong{ display:block; font-size: 14px; }
-    .stat span{ color: var(--muted); font-size: 13px; display:block; margin-top:6px; }
-
-    /* layout */
-    .layout{
-      display:grid;
-      grid-template-columns: 1fr 320px;
-      gap: 18px;
-      padding-bottom: 70px;
-    }
-    @media (max-width: 980px){
-      .layout{ grid-template-columns: 1fr; }
-    }
-
-    /* article card */
-    article{
-      border: 1px solid var(--border);
-      border-radius: calc(var(--radius) + 6px);
-      background: rgba(18,24,42,.55);
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-    @media (prefers-color-scheme: light){
-      article{ background: rgba(255,255,255,.85); }
-    }
-
-    h2{
-      margin: 28px 0 8px;
-      font-size: 22px;
-      letter-spacing:-.02em;
-    }
-    h3{
-      margin: 18px 0 6px;
-      font-size: 17px;
-      letter-spacing:-.01em;
-    }
-    p{ margin: 0 0 14px; color: rgba(233,236,245,.95); }
-    @media (prefers-color-scheme: light){
-      p{ color: rgba(11,16,32,.92); }
-    }
-
-    /* figure */
-    figure{
-      margin: 18px 0;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.03);
-      overflow:hidden;
-    }
-    figure img{ width:100%; display:block; }
-    figcaption{
-      padding: 10px 12px;
-      color: var(--muted);
-      font-size: 13px;
-      border-top: 1px solid var(--border);
-    }
-
-    /* callouts */
-    .callout{
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      background:
-        radial-gradient(800px 220px at 0% 0%, rgba(124,58,237,.22), transparent 55%),
-        rgba(255,255,255,.03);
-      margin: 16px 0 18px;
-    }
-    .callout strong{ display:block; margin-bottom:6px; }
-    .callout p{ margin:0; color: var(--muted); }
-    .callout.warn{
-      background:
-        radial-gradient(800px 220px at 0% 0%, rgba(245,158,11,.22), transparent 55%),
-        rgba(255,255,255,.03);
-    }
-
-    /* lists */
-    ul{ margin: 10px 0 14px 20px; padding:0; }
-    li{ margin: 8px 0; color: rgba(233,236,245,.95); }
-    @media (prefers-color-scheme: light){
-      li{ color: rgba(11,16,32,.92); }
-    }
-
-    /* cards grid */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-    .card{
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      background: rgba(255,255,255,.04);
-    }
-    .tag{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      font-size: 12px;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.03);
+    header h1 {
+      font-size: 42px;
       margin-bottom: 10px;
     }
-    .tag i{
-      width:10px; height:10px; border-radius:999px; display:inline-block;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+
+    header p {
+      font-size: 18px;
+      opacity: 0.9;
     }
 
-    /* TOC */
-    .toc{
-      position:sticky;
-      top: 74px;
-      align-self:start;
-      border: 1px solid var(--border);
-      border-radius: calc(var(--radius) + 6px);
-      background: rgba(18,24,42,.45);
-      box-shadow: var(--shadow);
-      padding: 16px;
-    }
-    @media (prefers-color-scheme: light){
-      .toc{ background: rgba(255,255,255,.85); }
-    }
-    .toc h4{
-      margin: 0 0 10px;
-      font-size: 14px;
-      letter-spacing:-.01em;
-    }
-    .toc a{
-      display:block;
-      padding: 8px 10px;
-      border-radius: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      text-decoration:none;
-      border: 1px solid transparent;
-    }
-    .toc a:hover{
-      color: var(--text);
-      border-color: var(--border);
-      background: rgba(255,255,255,.03);
-    }
-    .toc .active{
-      color: var(--text);
-      border-color: rgba(124,58,237,.35);
-      background: rgba(124,58,237,.10);
-    }
-    @media (max-width: 980px){
-      .toc{ position:relative; top:auto; }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: white;
     }
 
-    /* footer */
-    .end{
-      margin-top: 26px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 14px;
+    img {
+      width: 100%;
+      border-radius: 16px;
+      margin: 30px 0;
     }
-    code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
+
+    h2 {
+      margin-top: 60px;
+      font-size: 26px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 80px;
+      padding-bottom: 40px;
+      color: #555;
+    }
+
+    .logo-footer {
+      width: 70px;
+      margin-bottom: 15px;
+    }
+
+    blockquote {
+      background: #f1f5f9;
+      padding: 20px;
+      border-left: 4px solid #0f172a;
+      margin: 30px 0;
+      font-size: 15px;
     }
   </style>
 </head>
 
 <body>
-  <div class="progress" id="progress"></div>
 
-  <div class="nav">
-    <div class="wrap">
-      <div class="nav-inner">
-        <div class="brand">
-          <span class="dot"></span>
-          <span>Blog</span>
-        </div>
-        <div class="nav-links">
-          <a href="#konzept">Konzept</a>
-          <a href="#mechanismus">Mechanismus</a>
-          <a href="#empfehlungen">Empfehlungen</a>
-          <a href="#alternativen">Alternativen</a>
-          <a href="#literatur">Literatur</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<header>
+  <h1>Uncanny Valley & KI-Avatare bei Synaptica</h1>
+  <p>Synaptica – Learn Smarter.</p>
+</header>
 
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div class="hero-card">
-          <div class="hero-main">
-            <div class="kicker"><span class="k-badge"></span> Wirtschaftspsychologie × KI-Design</div>
-            <h1>Uncanny Valley & KI-Avatare</h1>
-            <p class="subtitle">
-              Warum menschenähnliche Avatare manchmal <em>unheimlich</em> wirken – und wie du sie so gestaltest,
-              dass Akzeptanz, Vertrauen und Nutzungsbereitschaft im Unternehmenskontext steigen.
-            </p>
-            <div class="meta">
-              <span class="pill">Dezember 2025</span>
-              <span class="pill">Alessandro Garofalo</span>
-              <span class="pill">HNU</span>
-              <span class="pill">~6–8 Min. Lesezeit</span>
-            </div>
-          </div>
-        </div>
+<main>
 
-        <div class="hero-card">
-          <div class="hero-side">
-            <div class="stat">
-              <strong>Was du hier mitnimmst</strong>
-              <span>Ein klares Modell, warum Akzeptanz kippt – plus konkrete Designregeln für Avatare.</span>
-            </div>
-            <div class="stat">
-              <strong>Warum das wichtig ist</strong>
-              <span>Im Kundenservice/Training entscheidet „Trust“ oft darüber, ob ein Avatar genutzt wird oder nicht.</span>
-            </div>
-            <div class="stat">
-              <strong>Output für deine Aufgabe</strong>
-              <span>Konzept erklären → Gestaltungs-Checks → Alternativen (inkl. kreativer Vergleich von Avatar-Varianten).</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- HERO -->
+  <img src="images/vrbrille" alt="Synaptica KI-Avatar in immersiver Lernumgebung">
 
-  <main class="wrap">
-    <div class="layout">
-      <article id="article">
-        <div class="callout">
-          <strong>Merksatz</strong>
-          <p>Das Problem ist selten „Menschlichkeit“ an sich – sondern <b>Inkongruenz</b>: Aussehen weckt Erwartungen, Verhalten erfüllt sie nicht.</p>
-        </div>
+  <h2>Einleitung</h2>
+  <p>
+    Synaptica entwickelt digitale Schulungslösungen für Unternehmen mit dem Ziel,
+    Lernen effizienter, flexibler und nachhaltiger zu gestalten. Klassische
+    E-Learning-Formate wie Videos oder modulare Kurse ermöglichen zwar einen
+    strukturierten Wissenstransfer, sind jedoch wenig flexibel, wenn Inhalte zu
+    einem späteren Zeitpunkt gezielt nachgeschlagen werden sollen.
+  </p>
 
-        <h2 id="konzept">1) Das Konzept: Was ist das Uncanny Valley?</h2>
-        <p>
-          Das <b>Uncanny Valley</b> beschreibt ein Akzeptanz-Phänomen: Je menschlicher ein künstliches Objekt wirkt,
-          desto positiver reagieren Menschen zunächst. Ab einem bestimmten Punkt kann die Reaktion jedoch abrupt kippen:
-          Figuren wirken plötzlich „off“, unheimlich oder irritierend — obwohl sie <i>fast</i> menschlich aussehen.
-        </p>
+  <p>
+    Vor diesem Hintergrund arbeitet Synaptica an der Entwicklung KI-gestützter
+    Avatare, die als interaktive Lernassistenten fungieren. Diese Avatare sollen
+    es Lernenden ermöglichen, Fragen zu konkreten Schulungsinhalten zu stellen,
+    ohne eine vollständige Schulung erneut absolvieren zu müssen. Damit rückt
+    nicht nur die technische Leistungsfähigkeit, sondern vor allem die Akzeptanz
+    solcher Avatare in den Fokus.
+  </p>
 
-        <figure>
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mori_Uncanny_Valley.svg/1200px-Mori_Uncanny_Valley.svg.png"
-            alt="Uncanny Valley Kurve nach Mori: Vertrautheit steigt, fällt dann stark ab (Tal) und steigt später wieder."
-            loading="lazy"
-          />
-          <figcaption>
-            Visualisierung des Uncanny-Valley-Gedankens (Wikimedia Commons). Typisch ist ein deutlicher Einbruch der „Vertrautheit“ im fast-realistisch-menschlichen Bereich.
-          </figcaption>
-        </figure>
+  <!-- PRODUKT -->
+  <img src="images/laptop mit logo" alt="Synaptica Lernplattform auf Laptop">
 
-        <h2 id="mechanismus">2) Warum wirkt es unheimlich? (Psychologischer Mechanismus)</h2>
-        <p>
-          In der Praxis ist die wichtigste Erklärung: Menschen reagieren sensibel auf <b>Ambiguität</b> und <b>Unvorhersagbarkeit</b>.
-          Sobald ein Avatar sehr menschlich wirkt, erwarten wir automatisch menschliche Signale (natürliche Mimik, Blickkontakt, Timing, Stimme).
-          Wenn dann kleine Details nicht passen, entsteht ein „Mismatch“ – und genau dieser Konflikt erzeugt Unbehagen.
-        </p>
+  <h2>Synaptica und interaktive Lernavatare</h2>
+  <p>
+    Der Einsatz von KI-Avataren im Weiterbildungskontext verspricht eine neue Form
+    des situativen Lernens. Lernende können Wissen genau dann abrufen, wenn es
+    benötigt wird, etwa zur Wiederholung einzelner Konzepte oder zur Klärung
+    spezifischer Fragen. Damit sollen Lernprozesse effizienter gestaltet und die
+    Überforderung durch umfangreiche Schulungsmaterialien reduziert werden.
+  </p>
 
-        <div class="callout warn">
-          <strong>Typische Trigger (bei KI-Avataren)</strong>
-          <p>„Dead eyes“, unpassende Mikrobewegungen, falsches Timing, Stimme passt nicht zum Gesicht, zu perfekte/zu steife Haut, ruckelige Animation.</p>
-        </div>
+  <p>
+    Gleichzeitig stellt sich für Synaptica die Frage, wie solche Avatare gestaltet
+    werden müssen, um als hilfreich, kompetent und vertrauenswürdig wahrgenommen
+    zu werden. Insbesondere stark menschenähnliche Avatare können unerwartete
+    emotionale Reaktionen hervorrufen, die den Lernerfolg beeinträchtigen.
+  </p>
 
-        <h2 id="kontext">3) Unternehmenskontext: Warum ist das für Akzeptanz so entscheidend?</h2>
-        <p>
-          In Unternehmen werden Avatare häufig dort eingesetzt, wo <b>Vertrauen</b> und <b>Kompetenz</b> sofort spürbar sein müssen:
-          Kundenservice, Onboarding, Produktberatung oder interne Trainings. Wenn Nutzer:innen in den ersten Sekunden Irritation spüren,
-          sinkt die Bereitschaft, dem System zuzuhören, Informationen zu teilen oder Empfehlungen zu akzeptieren.
-        </p>
+  <!-- LOGO BREAK -->
+  <img src="images/logo" alt="Synaptica Logo – Übergang zur Theorie">
 
-        <h2 id="empfehlungen">4) Gestaltungsempfehlungen: So minimierst du das Uncanny Valley</h2>
+  <h2>Das Uncanny Valley</h2>
+  <p>
+    Das Konzept des sogenannten <em>Uncanny Valley</em> geht auf den japanischen
+    Robotiker Masahiro Mori zurück. Mori beschreibt einen Zusammenhang zwischen
+    der Menschähnlichkeit künstlicher Entitäten und der emotionalen Reaktion von
+    Menschen auf diese. Mit zunehmender Menschähnlichkeit steigt zunächst die
+    wahrgenommene Vertrautheit, bevor sie bei nahezu menschlich wirkenden Objekten
+    abrupt abfällt.
+  </p>
 
-        <h3>4.1 Entscheide dich: stilisiert oder wirklich realistisch</h3>
-        <ul>
-          <li><b>Stilisierung</b> (klar künstlich) reduziert Erwartungen – oft der sicherste Weg für Unternehmens-Avatare.</li>
-          <li><b>Hyperrealismus</b> kann funktionieren, ist aber technisch anspruchsvoll (Mimik, Blick, Timing müssen stimmen).</li>
-          <li>Das größte Risiko liegt bei „<b>fast echt</b>“: 80–95% Menschlichkeit.</li>
-        </ul>
+  <blockquote>
+    “I have noticed that, in climbing toward the goal of making robots appear human,
+    our affinity for them increases until we come to a valley, which I call the
+    uncanny valley.”  
+    <br><br>
+    Mori (1970), p. 33
+  </blockquote>
 
-        <h3>4.2 Konsistenz-Regel: Look ↔ Stimme ↔ Verhalten</h3>
-        <ul>
-          <li>Wenn das Gesicht menschlich ist, muss die Interaktion ebenfalls „menschlich“ wirken (Pausen, Betonung, Blick).</li>
-          <li>Wenn die Stimme synthetisch klingt, ist ein weniger realistischer Stil oft passender (und wirkt kompetenter).</li>
-          <li>Lieber <b>weniger</b> Mimik als falsche Mimik. Reduktion wirkt häufig natürlicher als übertriebene Animation.</li>
-        </ul>
+  <p>
+    Dieser Einbruch wird als Uncanny Valley bezeichnet und äußert sich häufig in
+    Form von Unbehagen oder Irritation. Besonders relevant ist hierbei die
+    Inkongruenz zwischen äußerer Menschähnlichkeit und tatsächlichem Verhalten,
+    etwa bei Mimik, Bewegung oder sprachlicher Interaktion.
+  </p>
 
-        <h3>4.3 Reduziere Ambiguität (damit es weniger „creepy“ wirkt)</h3>
-        <ul>
-          <li><b>Transparenz:</b> „Ich bin ein KI-Avatar. Ich helfe dir bei X. Bei Y verbinde ich dich mit einem Menschen.“</li>
-          <li><b>Vorhersagbarkeit:</b> klare Struktur (Frage → Auswahl → Bestätigung → Ergebnis).</li>
-          <li><b>Kontrolle:</b> sichtbare Optionen („Stop“, „Nochmal“, „Mit Mensch sprechen“).</li>
-        </ul>
+  <h2>Psychologische Erklärung</h2>
+  <p>
+    Aktuelle Forschung zeigt, dass das Uncanny Valley kein rein ästhetisches
+    Problem darstellt, sondern eng mit psychologischen Mechanismen wie
+    Erwartungsverletzungen und Ambiguität verbunden ist. Menschen entwickeln bei
+    stark menschenähnlichen Avataren implizite Erwartungen an soziale Kompetenz,
+    die durch inkonsistentes Verhalten schnell enttäuscht werden können.
+  </p>
 
-        <h2 id="alternativen">5) Alternative Gestaltungsansätze (wenn humanoid nicht passt)</h2>
-        <div class="cards">
-          <div class="card">
-            <div class="tag"><i></i> Option A</div>
-            <h3>Voice-Only</h3>
-            <p>Keine visuelle Menschlichkeit → weniger Erwartungsdruck. Ideal für funktionale Tasks (FAQ, Status, Prozesse).</p>
-          </div>
-          <div class="card">
-            <div class="tag"><i></i> Option B</div>
-            <h3>Chat + Icon</h3>
-            <p>Klar „digital“, wirkt oft vertrauenswürdig, weil es keine Fake-Mensch-Erwartung triggert.</p>
-          </div>
-          <div class="card">
-            <div class="tag"><i></i> Option C</div>
-            <h3>Abstrakter Avatar</h3>
-            <p>Sozial präsent, aber erkennbar künstlich – für viele Unternehmenskontexte ein sehr guter Sweet Spot.</p>
-          </div>
-        </div>
+  <!-- BUSINESS -->
+  <img src="images/fernsehermitlogo" alt="Synaptica Präsentation im Unternehmenskontext">
 
-        <h2 id="kreativ">6) Kreativer Teil: Drei Avatar-Varianten vergleichen</h2>
-        <p>
-          Wenn du kreativ sein willst (wie in deiner Aufgabenfolie), kannst du drei Design-Varianten gegenüberstellen:
-        </p>
-        <ul>
-          <li><b>Avatar A (stark stilisiert):</b> hohe Akzeptanz, geringe Uncanny-Risiken</li>
-          <li><b>Avatar B (semi-realistisch):</b> häufige Irritation → bestes Beispiel für „Valley“</li>
-          <li><b>Avatar C (realistisch + hochwertige Animation):</b> kann sehr gut funktionieren, aber teuer/aufwendig</li>
-        </ul>
-        <p>
-          Dann beschreibst du kurz deinen Optimierungsprozess: Nutzerfeedback sammeln, irritierende Momente identifizieren
-          (Blick, Timing, Stimme), iterativ verbessern.
-        </p>
+  <h2>Gestaltungsempfehlungen für Synaptica</h2>
+  <p>
+    Für Synaptica bedeutet dies, dass die visuelle Gestaltung von KI-Avataren
+    sorgfältig auf den Nutzungskontext abgestimmt werden muss. Besonders
+    semi-realistische Avatare bergen ein erhöhtes Risiko, in das Uncanny Valley
+    zu fallen, da sie hohe Erwartungen erzeugen, die technisch nicht immer
+    erfüllt werden können.
+  </p>
 
-        <h2 id="literatur">Literatur</h2>
-        <ul>
-          <li>Mori, M. (1970). <i>The Uncanny Valley</i>.</li>
-          <li>Langer, M., & König, C. J. (2018). <i>Introducing and Testing the Creepiness of Situation Scale (CRoSS)</i>. Frontiers in Psychology.</li>
-        </ul>
+  <p>
+    Eine bewusste Stilisierung, konsistente Interaktionsmuster und transparente
+    Kommunikation über die Fähigkeiten des Avatars können dazu beitragen,
+    Akzeptanz zu fördern und Unbehagen zu vermeiden.
+  </p>
 
-        <div class="end">
-          <p>
-            <b>Tipp:</b> Wenn du eigene Bilder einfügen willst, lade sie in einen Ordner <code>images/</code> hoch und nutze z. B.
-            <code>&lt;img src="images/avatarA.png" alt="Avatar A"&gt;</code>.
-          </p>
-        </div>
-      </article>
+  <!-- LEARNING CONTEXT -->
+  <img src="images/ipad" alt="Mobiler Zugriff auf Synaptica Lerninhalte">
 
-      <aside class="toc" aria-label="Inhaltsverzeichnis">
-        <h4>Inhaltsverzeichnis</h4>
-        <a href="#konzept" data-toc>1) Konzept</a>
-        <a href="#mechanismus" data-toc>2) Mechanismus</a>
-        <a href="#kontext" data-toc>3) Unternehmenskontext</a>
-        <a href="#empfehlungen" data-toc>4) Empfehlungen</a>
-        <a href="#alternativen" data-toc>5) Alternativen</a>
-        <a href="#kreativ" data-toc>6) Kreativer Teil</a>
-        <a href="#literatur" data-toc>Literatur</a>
-      </aside>
-    </div>
-  </main>
+  <h2>KI-Avatare als Lernassistenten</h2>
+  <p>
+    Im Kontext digitaler Schulungen können KI-Avatare insbesondere dann sinnvoll
+    eingesetzt werden, wenn sie als funktionale Lernassistenten verstanden
+    werden. Statt menschliche Interaktion zu imitieren, sollten sie gezielt
+    Unterstützung bei der Wissensabfrage bieten.
+  </p>
 
-  <script>
-    // Reading progress bar
-    const progress = document.getElementById('progress');
-    const updateProgress = () => {
-      const doc = document.documentElement;
-      const scrollTop = doc.scrollTop || document.body.scrollTop;
-      const scrollHeight = doc.scrollHeight - doc.clientHeight;
-      const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-      progress.style.width = pct + '%';
-    };
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
+  <p>
+    Durch diesen Ansatz kann Synaptica den Mehrwert von KI-Avataren nutzen, ohne
+    unnötige Risiken für Akzeptanz und Vertrauen einzugehen.
+  </p>
 
-    // Active TOC link on scroll
-    const tocLinks = Array.from(document.querySelectorAll('[data-toc]'));
-    const sections = tocLinks
-      .map(a => document.querySelector(a.getAttribute('href')))
-      .filter(Boolean);
+</main>
 
-    const setActive = (id) => {
-      tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
-    };
+<footer>
+  <img src="images/logodunkel" alt="Synaptica Logo" class="logo-footer">
+  <p>© Synaptica – Learn Smarter.</p>
+</footer>
 
-    const observer = new IntersectionObserver((entries) => {
-      // choose the most visible section
-      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (visible && visible.target && visible.target.id) setActive(visible.target.id);
-    }, { rootMargin: "-20% 0px -70% 0px", threshold: [0.1, 0.2, 0.35, 0.5, 0.75] });
-
-    sections.forEach(s => observer.observe(s));
-  </script>
 </body>
 </html>
