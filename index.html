@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Uncanny Valley & KI-Avatare – Synaptica</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     html { scroll-behavior: smooth; }
@@ -16,35 +16,35 @@
       line-height: 1.75;
     }
 
-    /* ===== HERO BANNER (Ihr links, Text rechts) ===== */
+    /* ===== HERO: Bild links + weißes Text-Panel rechts (mit Übergang) ===== */
     .hero {
       position: relative;
       height: 520px;
       width: 100%;
 
-      /* Bild */
       background-image: url("images/gründer.png");
-      background-size: cover;              /* füllt Hero, kein Balken-Look */
       background-repeat: no-repeat;
-      background-position: 20% 25%;
-;     /* Fokus links: ihr bleibt sichtbar */
-      background-color: #0f172a;           /* Fallback */
 
+      /* Bild "kleiner" machen (weniger Zoom) */
+      background-size: 1200px auto;     /* feinjustieren: 1100–1350px */
+      background-position: left 25%;    /* Köpfe oben sicher, Fokus links */
+
+      background-color: #0f172a;
       display: flex;
-      align-items: center;
+      align-items: stretch;
     }
 
+    /* leichtes Mood-Darkening auf dem Bildbereich */
     .hero-overlay {
       position: absolute;
       inset: 0;
-
-      /* Links fast klar, rechts stark -> Text sauber lesbar */
       background: linear-gradient(
         to right,
-        rgba(15, 23, 42, 0.05) 0%,
-        rgba(15, 23, 42, 0.55) 45%,
-        rgba(15, 23, 42, 0.85) 100%
+        rgba(15, 23, 42, 0.18) 0%,
+        rgba(15, 23, 42, 0.10) 45%,
+        rgba(15, 23, 42, 0.00) 60%
       );
+      pointer-events: none;
     }
 
     .hero-inner {
@@ -53,12 +53,35 @@
       margin: 0 auto;
       padding: 0 20px;
       width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Rechtes Panel mit weichem Übergang (links transparent -> rechts weiß) */
+    .hero-panel {
+      margin-left: auto;
+      width: min(56%, 640px);
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.00) 0%,
+        rgba(255, 255, 255, 0.88) 18%,
+        rgba(255, 255, 255, 0.94) 100%
+      );
+
+      border-radius: 18px;
+      padding: 34px 34px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.18);
+      backdrop-filter: blur(6px);
     }
 
     .hero-text {
-      max-width: 540px;
-      margin-left: auto; /* Text rechts */
-      color: #fff;
+      max-width: 520px;
+      color: #0f172a;
     }
 
     .hero h1 {
@@ -69,7 +92,7 @@
 
     .hero h2 {
       font-size: 18px;
-      font-weight: 600;
+      font-weight: 700;
       opacity: 0.9;
       margin: 0 0 10px;
     }
@@ -82,21 +105,8 @@
 
     .hero .authors {
       font-size: 14px;
-      opacity: 0.85;
+      opacity: 0.8;
       margin-top: 14px;
-    }
-
-    @media (max-width: 768px) {
-      .hero {
-        height: 420px;
-        background-position: center top; /* Mobile: lieber zentriert */
-      }
-
-      .hero-text {
-        margin-left: 0;
-        max-width: 100%;
-        text-align: center;
-      }
     }
 
     /* --- Layout für Content + Reiter --- */
@@ -110,7 +120,6 @@
       align-items: start;
     }
 
-    /* Linker Content als "Card" */
     .content {
       background: white;
       padding: 40px 24px;
@@ -146,6 +155,19 @@
       padding: 20px;
       border-left: 4px solid #0f172a;
       margin: 30px 0;
+      font-size: 15px;
+    }
+
+    /* Hanging indent für APA-Literatur */
+    .literature {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .literature li {
+      margin-bottom: 16px;
+      padding-left: 24px;
+      text-indent: -24px;
       font-size: 15px;
     }
 
@@ -195,7 +217,7 @@
       padding: 6px 10px;
     }
 
-    /* Mobile: Reiter nach oben, alles untereinander */
+    /* Mobile */
     @media (max-width: 900px) {
       main {
         grid-template-columns: 1fr;
@@ -206,24 +228,54 @@
         order: -1;
       }
     }
+
+    /* Mobile: Hero wird vertikal, Panel full width */
+    @media (max-width: 768px) {
+      .hero {
+        height: auto;
+        min-height: 520px;
+        background-size: cover;
+        background-position: center top;
+        padding: 22px 0;
+      }
+
+      .hero-inner {
+        align-items: flex-end;
+      }
+
+      .hero-panel {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        padding: 22px 18px;
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .hero-text {
+        text-align: center;
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- ===== HERO BANNER ===== -->
+  <!-- ===== HERO ===== -->
   <header class="hero">
     <div class="hero-overlay" aria-hidden="true"></div>
 
     <div class="hero-inner">
-      <div class="hero-text">
-        <h2>"Fast menschlich. Und doch unheimlich"</h2>
-        <h1>Uncanny Valley &amp; die Akzeptanz von KI-Avataren</h1>
-        <p>Synaptica – Learn Smarter.</p>
+      <div class="hero-panel">
+        <div class="hero-text">
+          <h2>"Fast menschlich. Und doch unheimlich"</h2>
+          <h1>Uncanny Valley &amp; die Akzeptanz von KI-Avataren</h1>
+          <p>Synaptica – Learn Smarter.</p>
 
-        <p class="authors">
-          Alessandro Garofalo, Melisa Aydogan, Johannes Eller
-        </p>
+          <p class="authors">
+            Alessandro Garofalo, Melisa Aydogan, Johannes Eller
+          </p>
+        </div>
       </div>
     </div>
   </header>
